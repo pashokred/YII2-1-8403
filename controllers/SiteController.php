@@ -56,6 +56,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (!Yii::$app->session->has('page')) {
+            Yii::$app->session->set('page', 'HELLO-PAGE');
+        }
+
         return $this->render('index');
     }
 
