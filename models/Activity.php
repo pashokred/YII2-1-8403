@@ -16,4 +16,8 @@ class Activity extends Model
     public $dayEnd;
     public $userID;
     public $description;
+
+    // hw
+    public $repeat = false;
+    public $blocked = true;
 }

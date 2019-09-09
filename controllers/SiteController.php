@@ -118,6 +118,8 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
+        Yii::info('Test message');
+
         return $this->render('about');
     }
 }
