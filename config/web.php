@@ -5,22 +5,21 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+
     'language' => 'ru',
+
     'basePath' => dirname(__DIR__),
+
     'bootstrap' => ['log'],
+
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'modules' => [
-        'first' => [
-            'class' => 'app\modules\first\Module',
-        ],
-    ],
+
+    'modules' => [],
+
     'components' => [
-        'seo' => [
-            'class' => app\components\Seo::class,
-        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Fet2SHWdQQCJgh9dFkbF2RksZkU-pDOr',
@@ -59,6 +58,7 @@ $config = [
             'rules' => [],
         ],
     ],
+
     'params' => $params,
 ];
 
@@ -74,7 +74,6 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
         'allowedIPs' => ['*'],
     ];
 }
