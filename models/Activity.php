@@ -23,17 +23,17 @@ class Activity extends Model
     /**
      * @var int Дата начала
      */
-    public $dayStart;
+    public $date_start;
 
     /**
      * @var int Дата окончания
      */
-    public $dayEnd;
+    public $date_end;
 
     /**
      * @var int Номер пользователя
      */
-    public $userID;
+    public $user_id;
 
     /**
      * @var string Описание события
@@ -49,4 +49,49 @@ class Activity extends Model
      * @var bool Могут ли другие события быть в этот день
      */
     public $blocked = true;
+
+    /**
+     * @var array Прикрепленные файлы
+     */
+    public $attachments;
+
+    /**
+     * Правила валидации данных модели
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            [['title', 'date_start', 'date_end', 'user_id', 'description'], 'required'],
+
+            [['title', 'description'], 'string'],
+            [['title'], 'string', 'min' => 2, 'max' => 160],
+
+            [['date_start', 'date_end'], 'date', 'format' => 'php:Y-m-d'],
+
+            [['user_id'], 'integer'],
+
+            [['repeat', 'blocked'], 'boolean'],
+
+            [['attachments'], 'file', 'maxFiles' => 5],
+        ];
+    }
+
+    /**
+     * Названия полей модели
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return [
+            'title' => 'Название',
+            'date_start' => 'Дата начала',
+            'date_end' => 'Дата окончания',
+            'user_id' => 'Пользователь',
+            'description' => 'Описание события',
+            'repeat' => 'Повтор',
+            'blocked' => 'Блокирующее',
+            'attachments' => 'Прикрепленные файлы',
+        ];
+    }
 }
