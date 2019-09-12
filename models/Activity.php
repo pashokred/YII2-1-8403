@@ -53,7 +53,7 @@ class Activity extends Model
     /**
      * @var array Прикрепленные файлы
      */
-    public $attachments;
+    //public $attachments;
 
     /**
      * Правила валидации данных модели
@@ -73,7 +73,7 @@ class Activity extends Model
 
             [['repeat', 'blocked'], 'boolean'],
 
-            [['attachments'], 'file', 'maxFiles' => 5],
+            //[['attachments'], 'file', 'maxFiles' => 5],
         ];
     }
 

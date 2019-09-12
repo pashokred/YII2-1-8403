@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\Activity;
 use Yii;
+use yii\db\Query;
+use yii\db\QueryBuilder;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\UploadedFile;
@@ -14,26 +16,48 @@ class ActivityController extends Controller
      * Просмотр всех событий
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($sort = false)
     {
-        return $this->render('index');
+        //$db = Yii::$app->db;
+        //
+        //$rows = $db->createCommand('select * from activities')->queryAll();
+
+        $query = new Query();
+
+        $query->select('*')->from('activities');
+
+        if ($sort) {
+            $query->orderBy("id desc");
+        }
+
+        $rows = $query->all();
+
+        return $this->render('index', [
+            'activities' => $rows
+        ]);
     }
 
     /**
      * Просмотр выбранного события
      * @return string
      */
-    public function actionView()
+    public function actionView($id)
     {
-        $model = new Activity([
-            'title' => 'Событие №1',
-            'description' => 'Небольшое описание',
-            'date_start' => '2019-09-12',
-            'date_end' => '2019-09-13',
-            'blocked' => true,
-            'repeat' => false,
-            'user_id' => 1,
-        ]);
+        //$model = new Activity([
+        //    'title' => 'Событие №1',
+        //    'description' => 'Небольшое описание',
+        //    'date_start' => '2019-09-12',
+        //    'date_end' => '2019-09-13',
+        //    'blocked' => true,
+        //    'repeat' => false,
+        //    'user_id' => 1,
+        //]);
+
+        $db = Yii::$app->db;
+
+        $model = $db->createCommand('select * from activities where id=:id', [
+            ':id' => $id,
+        ])->queryOne();
 
         return $this->render(
             'view',
@@ -73,9 +97,23 @@ class ActivityController extends Controller
         $model = new Activity();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->attachments = UploadedFile::getInstances($model, 'attachments');
+            //$model->attachments = UploadedFile::getInstances($model, 'attachments');
 
             if ($model->validate()) {
+                $params = [];
+                $query = new QueryBuilder(Yii::$app->db);
+
+                $sql = $query->insert('activities', $model->attributes, $params);
+
+                Yii::$app->db
+                    ->createCommand($sql, $params)
+                    ->execute();
+
+                //Yii::$app->db
+                //    ->createCommand()
+                //    ->update('activities', $model->attributes)
+                //    ->execute();
+
                 return "Success: " . VarDumper::export($model->attributes);
             } else {
                 return "Failed: " . VarDumper::export($model->errors);
