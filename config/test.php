@@ -8,11 +8,14 @@ $db = require __DIR__ . '/test_db.php';
 return [
     'id' => 'basic-tests',
     'basePath' => dirname(__DIR__),
+
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
+
     'language' => 'en-US',
+
     'components' => [
         'db' => $db,
         'mailer' => [
@@ -25,7 +28,7 @@ return [
             'showScriptName' => true,
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => app\models\User::class,
         ],
         'request' => [
             'cookieValidationKey' => 'test',
@@ -38,5 +41,6 @@ return [
             */
         ],
     ],
+
     'params' => $params,
 ];

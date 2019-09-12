@@ -9,9 +9,19 @@ namespace app\models;
 
 use yii\base\Model;
 
+/**
+ * Модель - День
+ * @package app\models
+ */
 class Day extends Model
 {
-    public $dayOff = false; // false - рабочий, true - выходной
+    /**
+     * @var bool Флаг выходного дня
+     */
+    public $dayOff = false;
 
+    /**
+     * @var array События в этот день
+     */
     public $activities;
 }

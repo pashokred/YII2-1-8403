@@ -2,13 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -19,7 +18,7 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['logout'],
                 'rules' => [
                     [
@@ -30,7 +29,7 @@ class SiteController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
                 ],
@@ -44,13 +43,13 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => ['class' => 'yii\web\ErrorAction'],
-            'captcha' => ['class' => 'yii\captcha\CaptchaAction', 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null],
+            'error' => ['class' => yii\web\ErrorAction::class],
+            'captcha' => ['class' => yii\captcha\CaptchaAction::class, 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null],
         ];
     }
 
     /**
-     * Displays homepage.
+     * Показать главную страницу
      *
      * @return string
      */
@@ -60,7 +59,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Login action.
+     * Страница с формой входа на сайт
      *
      * @return Response|string
      */
@@ -71,18 +70,20 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
         $model->password = '';
+
         return $this->render('login', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Logout action.
+     * Выход из пользовательской сессии
      *
      * @return Response
      */
@@ -91,35 +92,5 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        Yii::info('Test message');
-
-        return $this->render('about');
     }
 }
