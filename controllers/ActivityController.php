@@ -6,25 +6,47 @@ use app\models\Activity;
 use Yii;
 use yii\db\Query;
 use yii\db\QueryBuilder;
+use yii\filters\AccessControl;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
 class ActivityController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class, // ACF
+                'only' => ['index', 'view', 'create'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     /**
      * Просмотр всех событий
      * @return string
      */
     public function actionIndex($sort = false)
     {
+        //if (Yii::$app->user->isGuest) {
+        //    return '403 - nonono';
+        //}
+
         //$db = Yii::$app->db;
         //
         //$rows = $db->createCommand('select * from activities')->queryAll();
 
-        $query = new Query();
+        //$query = new Query();
 
-        $query->select('*')->from('activities');
+        //$query->select('*')->from('activities');
+        $query = Activity::find();
 
         if ($sort) {
             $query->orderBy("id desc");
@@ -100,14 +122,15 @@ class ActivityController extends Controller
             //$model->attachments = UploadedFile::getInstances($model, 'attachments');
 
             if ($model->validate()) {
-                $params = [];
-                $query = new QueryBuilder(Yii::$app->db);
-
-                $sql = $query->insert('activities', $model->attributes, $params);
-
-                Yii::$app->db
-                    ->createCommand($sql, $params)
-                    ->execute();
+                $model->save();
+                //$params = [];
+                //$query = new QueryBuilder(Yii::$app->db);
+                //
+                //$sql = $query->insert('activities', $model->attributes, $params);
+                //
+                //Yii::$app->db
+                //    ->createCommand($sql, $params)
+                //    ->execute();
 
                 //Yii::$app->db
                 //    ->createCommand()

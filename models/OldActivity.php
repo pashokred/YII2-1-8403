@@ -7,20 +7,53 @@
 
 namespace app\models;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
 /**
  * Модель - Событие
  * @package app\models
- *
- * @property-read User $user
  */
-class Activity extends ActiveRecord
+class Activity extends Model
 {
-    public static function tableName()
-    {
-        return 'activities';
-    }
+    /**
+     * @var string Название события
+     */
+    public $title;
+
+    /**
+     * @var int Дата начала
+     */
+    public $date_start;
+
+    /**
+     * @var int Дата окончания
+     */
+    public $date_end;
+
+    /**
+     * @var int Номер пользователя
+     */
+    public $user_id;
+
+    /**
+     * @var string Описание события
+     */
+    public $description;
+
+    /**
+     * @var bool Может ли событие повторяться
+     */
+    public $repeat = false;
+
+    /**
+     * @var bool Могут ли другие события быть в этот день
+     */
+    public $blocked = true;
+
+    /**
+     * @var array Прикрепленные файлы
+     */
+    //public $attachments;
 
     /**
      * Правила валидации данных модели
@@ -60,10 +93,5 @@ class Activity extends ActiveRecord
             'blocked' => 'Блокирующее',
             'attachments' => 'Прикрепленные файлы',
         ];
-    }
-
-    public function getUser() // $model->user
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

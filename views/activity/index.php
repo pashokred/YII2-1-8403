@@ -2,7 +2,7 @@
 
 /**
  * @var $this yii\web\View
- * @var array $activities
+ * @var \app\models\Activity[] $activities
  */
 
 use yii\helpers\Html;
@@ -20,7 +20,7 @@ use yii\helpers\Html;
 <ul>
 <?php foreach ($activities as $item) { ?>
     <li>
-        <?= var_dump($item); ?>
+        <?= var_dump($item->user->username); ?>
     </li>
 <?php } ?>
 </ul>

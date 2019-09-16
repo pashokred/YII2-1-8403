@@ -1,5 +1,7 @@
 <?php
 
+use yii\rbac\DbManager;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -64,6 +66,10 @@ $config = [
             'enablePrettyUrl' => true, // ?r=site/index -> site/index
             'showScriptName' => false, // index.php
             'rules' => [],
+        ],
+
+        'authManager' => [
+            'class' => yii\rbac\DbManager::class,
         ],
     ],
 
