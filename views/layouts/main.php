@@ -17,6 +17,7 @@ AppAsset::register($this);
 ?>
 
 <?php $this->beginPage() ?>
+
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 
@@ -24,12 +25,16 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <?php $this->registerCsrfMetaTags() ?>
+
     <title><?= Html::encode($this->title) ?></title>
+
     <?php $this->head() ?>
 </head>
 
 <body>
+
 <?php $this->beginBody() ?>
 
 <div class="wrap">
@@ -48,18 +53,9 @@ AppAsset::register($this);
             ['label' => 'Главная', 'url' => ['/site/index']],
             ['label' => 'События', 'url' => ['/activity/index']],
 
-            Yii::$app->user->isGuest ? (
-            ['label' => 'Вход', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Выйти (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            ),
+            Yii::$app->user->isGuest
+                ? ['label' => 'Вход', 'url' => ['/site/login']]
+                : ['label' => 'Выйти', 'url' => ['/site/logout']],
         ],
     ]);
 
@@ -86,6 +82,8 @@ AppAsset::register($this);
 </footer>
 
 <?php $this->endBody() ?>
+
 </body>
 </html>
+
 <?php $this->endPage() ?>

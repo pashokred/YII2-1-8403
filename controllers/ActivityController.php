@@ -4,25 +4,25 @@ namespace app\controllers;
 
 use app\models\Activity;
 use Yii;
-use yii\db\Query;
-use yii\db\QueryBuilder;
 use yii\filters\AccessControl;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
-use yii\web\UploadedFile;
 
 class ActivityController extends Controller
 {
+    /**
+     * Настройка поведений контроллера (ACF доступы)
+     * @return array
+     */
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => AccessControl::class, // ACF
-                'only' => ['index', 'view', 'create'],
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'actions' => ['index', 'view', 'edit', 'delete', 'submit'],
+                        'roles' => ['?', '@'],
                     ],
                 ],
             ],
@@ -33,116 +33,81 @@ class ActivityController extends Controller
      * Просмотр всех событий
      * @return string
      */
-    public function actionIndex($sort = false)
+    public function actionIndex()
     {
-        //if (Yii::$app->user->isGuest) {
-        //    return '403 - nonono';
-        //}
+        // TODO: получение всех событий через pagination (GridView)
 
-        //$db = Yii::$app->db;
-        //
-        //$rows = $db->createCommand('select * from activities')->queryAll();
-
-        //$query = new Query();
-
-        //$query->select('*')->from('activities');
-        $query = Activity::find();
-
-        if ($sort) {
-            $query->orderBy("id desc");
-        }
-
-        $rows = $query->all();
+        $items = Activity::find()->all();
 
         return $this->render('index', [
-            'activities' => $rows
+            'activities' => $items,
         ]);
     }
 
     /**
      * Просмотр выбранного события
+     *
+     * @param int $id
+     *
      * @return string
      */
-    public function actionView($id)
+    public function actionView(int $id)
     {
-        //$model = new Activity([
-        //    'title' => 'Событие №1',
-        //    'description' => 'Небольшое описание',
-        //    'date_start' => '2019-09-12',
-        //    'date_end' => '2019-09-13',
-        //    'blocked' => true,
-        //    'repeat' => false,
-        //    'user_id' => 1,
-        //]);
+        // TODO: просмотр события по GET $id (DetailView)
 
-        $db = Yii::$app->db;
+        $item = Activity::findOne($id);
 
-        $model = $db->createCommand('select * from activities where id=:id', [
-            ':id' => $id,
-        ])->queryOne();
-
-        return $this->render(
-            'view',
-            compact('model')
-        );
+        return $this->render('view', [
+            'model' => $item,
+        ]);
     }
 
     /**
      * Создание нового события
+     *
+     * @param int|null $id
+     *
      * @return string
      */
-    public function actionCreate()
+    public function actionEdit(int $id = null)
     {
-        $model = new Activity();
+        // TODO: показ ошибки 404, если нет такой статьи или нет прав на редактирование
 
-        return $this->render(
-            'create',
-            compact('model')
-        );
+        $item = $id ? Activity::findOne($id) : new Activity();
+
+        return $this->render('edit', [
+            'model' => $item,
+        ]);
     }
 
     /**
      * Удаление выбранного события
+     *
+     * @param int $id
+     *
      * @return string
      */
-    public function actionDelete()
+    public function actionDelete(int $id)
     {
-        return 'Activity@delete';
+        // TODO: удаление записи по $id + flash Alert, или показ ошибки, если нет прав на редактирование
+
+        Activity::deleteAll(['id' => $id]);
+
+        return $this->redirect(['activity/index']);
     }
 
-    /**
-     * Тестовый метод для показа данных формы
-     * @return string
-     */
     public function actionSubmit()
     {
-        $model = new Activity();
+        // TODO: сохранение или обновление записей из POST + flash Alert + redirect (проверка доступа)
 
-        if ($model->load(Yii::$app->request->post())) {
-            //$model->attachments = UploadedFile::getInstances($model, 'attachments');
+        $form = new Activity();
 
-            if ($model->validate()) {
-                $model->save();
-                //$params = [];
-                //$query = new QueryBuilder(Yii::$app->db);
-                //
-                //$sql = $query->insert('activities', $model->attributes, $params);
-                //
-                //Yii::$app->db
-                //    ->createCommand($sql, $params)
-                //    ->execute();
-
-                //Yii::$app->db
-                //    ->createCommand()
-                //    ->update('activities', $model->attributes)
-                //    ->execute();
-
-                return "Success: " . VarDumper::export($model->attributes);
-            } else {
-                return "Failed: " . VarDumper::export($model->errors);
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            if ($form->save()) {
+                return $this->redirect(['activity/view', 'id' => $form->id]);
             }
         }
 
-        return 'Activity@Submit';
+        return $this->goBack();
     }
 }

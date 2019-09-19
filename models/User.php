@@ -7,76 +7,142 @@
 
 namespace app\models;
 
+use Yii;
+use yii\base\Exception;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * Class User
+ * Класс - Пользователь
+ *
  * @package app\models
  *
- * @property int $id
- * @property string $username
- * @property string $password_hash
- * @property string $auth_key
- * @property string $access_token
- * @property int $created_at
- * @property int $updated_at
+ * @property int $id [int(11)]  Номер пользователя
+ * @property string $username [varchar(255)]  Логин
+ * @property string $password_hash [varchar(255)]  Хеш пароля
+ * @property string $auth_key [varchar(255)]  Ключ аутентификации
+ * @property string $access_token [varchar(255)]  Ключ мгновенного доступа
+ * @property int $created_at [int(11)]  Дата создания записи
+ * @property int $updated_at [int(11)]  Дата последнего редактирования
  *
- * @property-write $password -> setPassword()
+ * @property-write string $password Чистый пароль
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    public static function tableName()
+    /**
+     * Названия атрибутов модели
+     * @return array
+     */
+    public function attributeLabels()
     {
-        return 'users';
+        return [
+            'id' => '#',
+            'username' => 'Логин',
+            'password_hash' => 'Пароль',
+            'auth_key' => 'Ключ авторизации',
+            'access_token' => 'Токен доступа',
+            'created_at' => 'Дата создания',
+            'updated_at' => 'Дата последнего изменения',
+        ];
     }
 
+    /**
+     * Поиск пользователя по ID
+     *
+     * @param int|string $id
+     *
+     * @return User|IdentityInterface|null
+     */
     public static function findIdentity($id)
     {
-        // select * from users where id = $id
         return self::findOne(['id' => $id]);
     }
 
+    /**
+     * Поиск пользователя по токену мгновенного доступа
+     *
+     * @param mixed $token
+     * @param null $type
+     *
+     * @return User|IdentityInterface|null
+     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
         return self::findOne(['access_token' => $token]);
     }
 
+    /**
+     * Обращение к уникальному ID пользователя
+     * @return int|string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Обращение к ключу авторизации (для авто-логина через cookie)
+     * @return string
+     */
     public function getAuthKey()
     {
         return $this->auth_key;
     }
 
+    /**
+     * Валидация ключа авторизации
+     *
+     * @param string $authKey
+     *
+     * @return bool
+     */
     public function validateAuthKey($authKey)
     {
         return $this->auth_key == $authKey;
     }
 
+    /**
+     * Поиск пользователя по логину username
+     *
+     * @param $username
+     *
+     * @return User|null
+     */
     public static function findByUsername($username)
     {
         return self::findOne(['username' => $username]);
     }
 
+    /**
+     * Валидация хешей паролей
+     *
+     * @param $password
+     *
+     * @return bool
+     */
     public function validatePassword($password)
     {
-        //return $this->password === $password;
-        return \Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+    /**
+     * Генерация случайной строки для записи в токен авторизации
+     * @throws Exception
+     */
     public function generateAuthKey()
     {
-        $this->auth_key = \Yii::$app->security->generateRandomString();
+        $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
+    /**
+     * Магический сеттер для установки пароля с автоматической генерацией хеша
+     *
+     * @param $password
+     *
+     * @throws Exception
+     */
     public function setPassword($password)
     {
-        // setValue -> value = 123123
-        // getValue -> return 123123
-        $this->password_hash = \Yii::$app->security->generatePasswordHash($password);
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 }

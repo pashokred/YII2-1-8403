@@ -10,18 +10,23 @@ namespace app\models;
 use yii\db\ActiveRecord;
 
 /**
- * Модель - Событие
+ * Класс - Событие
+ *
  * @package app\models
+ *
+ * @property int $id [int(11)]  Порядковый номер
+ * @property string $title [varchar(255)]  Название события
+ * @property string $date_start [varchar(255)]  Дата начала
+ * @property string $date_end [varchar(255)]  Дата окончания
+ * @property int $user_id [int(11)]  Создатель события
+ * @property string $description Описание события
+ * @property bool $repeat [tinyint(1)]  Может ли повторяться
+ * @property bool $blocked [tinyint(1)]  Блокирует ли даты
  *
  * @property-read User $user
  */
 class Activity extends ActiveRecord
 {
-    public static function tableName()
-    {
-        return 'activities';
-    }
-
     /**
      * Правила валидации данных модели
      * @return array
@@ -39,8 +44,6 @@ class Activity extends ActiveRecord
             [['user_id'], 'integer'],
 
             [['repeat', 'blocked'], 'boolean'],
-
-            //[['attachments'], 'file', 'maxFiles' => 5],
         ];
     }
 
@@ -58,11 +61,14 @@ class Activity extends ActiveRecord
             'description' => 'Описание события',
             'repeat' => 'Повтор',
             'blocked' => 'Блокирующее',
-            'attachments' => 'Прикрепленные файлы',
         ];
     }
 
-    public function getUser() // $model->user
+    /**
+     * Магический метод для получение зависимого объекта из БД
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }

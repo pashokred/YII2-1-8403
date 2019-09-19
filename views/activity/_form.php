@@ -20,10 +20,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
     <?= $form->field($model, 'repeat')->checkbox() ?>
     <?= $form->field($model, 'blocked')->checkbox() ?>
-    <?php //= $form->field($model, 'attachments[]')->fileInput(['multiple' => true]) ?>
 
     <div class="form-group" style="margin-top: 40px;">
-        <?= Html::submitButton('Продолжить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

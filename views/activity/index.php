@@ -2,9 +2,10 @@
 
 /**
  * @var $this yii\web\View
- * @var \app\models\Activity[] $activities
+ * @var Activity[] $activities
  */
 
+use app\models\Activity;
 use yii\helpers\Html;
 
 ?>
@@ -13,14 +14,16 @@ use yii\helpers\Html;
     <h1>Список событий</h1>
 
     <div class="form-group pull-right">
-        <?= Html::a('Создать', ['activity/create'], ['class' => 'btn btn-success pull-right']) ?>
+        <?= Html::a('Создать', ['activity/edit'], ['class' => 'btn btn-success pull-right']) ?>
     </div>
 </div>
 
 <ul>
-<?php foreach ($activities as $item) { ?>
-    <li>
-        <?= var_dump($item->user->username); ?>
-    </li>
-<?php } ?>
+    <?php foreach ($activities as $item) { ?>
+        <li style="padding: 20px 0;">
+            <?= $item->title ?> |
+            <?= Html::a('Просмотр', ['activity/view', 'id' => $item->id]) ?> |
+            <?= Html::a('Изменить', ['activity/edit', 'id' => $item->id]) ?>
+        </li>
+    <?php } ?>
 </ul>
