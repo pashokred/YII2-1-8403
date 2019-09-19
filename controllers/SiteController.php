@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\forms\LoginForm;
+use app\models\forms\SignupForm;
 use Yii;
 use yii\captcha\CaptchaAction;
 use yii\filters\AccessControl;
@@ -73,6 +74,29 @@ class SiteController extends Controller
         $model->password = '';
 
         return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Страница с формой регистрации
+     *
+     * @return Response|string
+     * @throws \yii\base\Exception
+     */
+    public function actionSignup()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new SignupForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            return $this->goHome();
+        }
+
+        return $this->render('signup', [
             'model' => $model,
         ]);
     }

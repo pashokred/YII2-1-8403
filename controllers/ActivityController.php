@@ -22,7 +22,7 @@ class ActivityController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view', 'edit', 'delete', 'submit'],
-                        'roles' => ['?', '@'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

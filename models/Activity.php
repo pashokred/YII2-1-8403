@@ -34,12 +34,19 @@ class Activity extends ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'date_start', 'date_end', 'user_id', 'description'], 'required'],
+            [['title', 'date_start', 'user_id', 'description'], 'required'],
 
             [['title', 'description'], 'string'],
             [['title'], 'string', 'min' => 2, 'max' => 160],
 
             [['date_start', 'date_end'], 'date', 'format' => 'php:Y-m-d'],
+
+            ['date_end', 'default', 'value' => function () {
+                return $this->date_start;
+            }],
+
+            // TODO: валидация даты (не раньше чем date_start)
+            //['date_end', 'validateDate'],
 
             [['user_id'], 'integer'],
 
