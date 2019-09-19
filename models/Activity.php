@@ -7,6 +7,7 @@
 
 namespace app\models;
 
+use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -27,6 +28,19 @@ use yii\db\ActiveRecord;
  */
 class Activity extends ActiveRecord
 {
+    public function behaviors()
+    {
+        return [
+            //BlameableBehavior::class,
+
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'user_id', // created_by
+                'updatedByAttribute' => 'user_id', // updated_by
+            ],
+        ];
+    }
+
     /**
      * Правила валидации данных модели
      * @return array
@@ -34,7 +48,7 @@ class Activity extends ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'date_start', 'user_id', 'description'], 'required'],
+            [['title', 'date_start', 'description'], 'required'],
 
             [['title', 'description'], 'string'],
             [['title'], 'string', 'min' => 2, 'max' => 160],
@@ -61,6 +75,7 @@ class Activity extends ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id' => '#',
             'title' => 'Название',
             'date_start' => 'Дата начала',
             'date_end' => 'Дата окончания',

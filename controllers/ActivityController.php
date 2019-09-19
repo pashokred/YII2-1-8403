@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Activity;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -21,7 +22,7 @@ class ActivityController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'edit', 'delete', 'submit'],
+                        'actions' => ['index', 'view', 'update', 'delete', 'submit'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -37,10 +38,17 @@ class ActivityController extends Controller
     {
         // TODO: получение всех событий через pagination (GridView)
 
-        $items = Activity::find()->all();
+        $query = Activity::find();
+
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'validatePage' => false,
+            ],
+        ]);
 
         return $this->render('index', [
-            'activities' => $items,
+            'provider' => $provider,
         ]);
     }
 
@@ -69,7 +77,7 @@ class ActivityController extends Controller
      *
      * @return string
      */
-    public function actionEdit(int $id = null)
+    public function actionUpdate(int $id = null)
     {
         // TODO: показ ошибки 404, если нет такой статьи или нет прав на редактирование
 

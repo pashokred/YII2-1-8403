@@ -9,6 +9,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Exception;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -29,6 +30,22 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    /**
+     * Набор поведений
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+
+            //[
+            //    'class' => TimestampBehavior::class,
+            //    'updatedAtAttribute' => 'last_change_at',
+            //],
+        ];
+    }
+
     /**
      * Названия атрибутов модели
      * @return array

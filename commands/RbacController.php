@@ -23,6 +23,8 @@ class RbacController extends Controller
     /**
      * Инициализация RBAC миграций и ролей
      *
+     * php yii rbac/init
+     *
      * @throws InvalidRouteException
      * @throws Exception
      * @throws \Exception
