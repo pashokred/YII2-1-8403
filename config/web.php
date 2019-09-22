@@ -65,6 +65,10 @@ $config = [
         'authManager' => [
             'class' => yii\rbac\DbManager::class,
         ],
+
+        //'formatter' => [
+        //    'dateFormat' => 'php:Y-m-d'
+        //],
     ],
 
     'params' => $params,
