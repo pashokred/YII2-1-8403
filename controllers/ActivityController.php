@@ -66,7 +66,18 @@ class ActivityController extends Controller
      */
     public function actionView(int $id)
     {
-        $item = Activity::findOne($id);
+        // ключ для записи в кеш
+        $cacheKey = "activity_{$id}"; // activity_1
+
+        // проверка на наличие в кеше
+        if (Yii::$app->cache->exists($cacheKey)) {
+            $item = Yii::$app->cache->get($cacheKey);
+        } else {
+            // получение из бд с сохранением в кеш
+            $item = Activity::findOne($id);
+
+            Yii::$app->cache->set($cacheKey, $item);
+        }
 
         // просматривать записи может только создатель или менеджер
         if (Yii::$app->user->can('manager') || $item->user_id == Yii::$app->user->id) {

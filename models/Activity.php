@@ -7,8 +7,10 @@
 
 namespace app\models;
 
+use app\components\CachedRecordBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -44,6 +46,12 @@ class Activity extends ActiveRecord
             ],
 
             TimestampBehavior::class,
+
+            // поведение для удаления/сохранения в кеш
+            [
+                'class' => CachedRecordBehavior::class,
+                'prefix' => 'activity',
+            ],
         ];
     }
 
@@ -95,7 +103,7 @@ class Activity extends ActiveRecord
 
     /**
      * Магический метод для получение зависимого объекта из БД
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
@@ -104,9 +112,10 @@ class Activity extends ActiveRecord
 
     /**
      * Проверка даты окончания события (не раньше даты начала)
+     *
      * @param $attr
      */
-    public function validateDate($attr)
+    public function validateDate($attr) // date_end
     {
         $start = strtotime($this->date_start);
         $end = strtotime($this->{$attr});
