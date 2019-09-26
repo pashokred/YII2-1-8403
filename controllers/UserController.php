@@ -65,6 +65,14 @@ class UserController extends Controller
         ]);
     }
 
+    public function actionActivities($id)
+    {
+        $user = User::findIdentity($id);
+
+        return $user->username;
+        //var_dump($user->activities);
+    }
+
     /**
      * Вывод формы создания нового пользователя
      * @return string|\yii\web\Response
