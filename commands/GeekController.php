@@ -76,8 +76,19 @@ class GeekController extends Controller
      *
      * @param int $times
      */
-    public function actionIndex(int $times = 1)
+    public function actionIndex(int $times = 1, $user = false)
     {
+        //if ($user) {
+        //    //
+        //
+        //    if (is_numeric($user)) {
+        //        // id
+        //        //$id = (int)$user;
+        //    } else {
+        //        // email
+        //    }
+        //}
+
         if (!$this->force && !$this->canRun()) {
             return;
         }

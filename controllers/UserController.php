@@ -115,14 +115,14 @@ class UserController extends Controller
         $user = Yii::$app->user->identity;
 
         $provider = new ActiveDataProvider([
-            'query' => Activity::find()->where(['user_id' => $user->id]),
+            'query' => Activity::findAll(['user_id' => $user->id]),
             'pagination' => [
                 'validatePage' => false,
             ],
         ]);
 
         $model = new UpdateUserForm(
-            $user->toArray(['username', 'password'])
+            $user->toArray(['username'])
         );
 
         if ($model->load(Yii::$app->request->post()) && $model->update($user)) {
