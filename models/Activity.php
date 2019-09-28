@@ -12,6 +12,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\Url;
 
 /**
  * Класс - Событие
@@ -125,5 +126,20 @@ class Activity extends ActiveRecord
                 $this->addError($attr, 'Некорректный формат даты');
             }
         }
+    }
+
+    /**
+     * Преобразование в массив для календаря
+     * @return array
+     */
+    public function toEvent()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'start' => $this->date_start,
+            'end' => $this->date_end,
+            'url' => Url::to(['/activity/view', 'id' => $this->id]),
+        ];
     }
 }

@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Activity;
 use app\models\forms\SignupForm;
+use app\models\forms\UpdateUserForm;
 use app\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -105,6 +107,29 @@ class UserController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionProfile()
+    {
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+
+        $provider = new ActiveDataProvider([
+            'query' => Activity::find()->where(['user_id' => $user->id]),
+            'pagination' => [
+                'validatePage' => false,
+            ],
+        ]);
+
+        $model = new UpdateUserForm(
+            $user->toArray(['username', 'password'])
+        );
+
+        if ($model->load(Yii::$app->request->post()) && $model->update($user)) {
+            Yii::$app->session->setFlash('success', 'Изменения успешно сохранены');
+        }
+
+        return $this->render('profile', compact('model', 'provider'));
     }
 
     /**

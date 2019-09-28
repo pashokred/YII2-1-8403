@@ -4,8 +4,10 @@ namespace app\controllers;
 
 use app\models\Activity;
 use Yii;
+use yii\caching\DbDependency;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\PageCache;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -26,6 +28,17 @@ class ActivityController extends Controller
                         'actions' => ['index', 'view', 'update', 'delete', 'submit'],
                         'roles' => ['@'],
                     ],
+                ],
+            ],
+
+            // кеширование страницы index
+            [
+                'class' => PageCache::class,
+                'only' => ['index'],
+                'duration' => 120,
+                'dependency' => [
+                    'class' => DbDependency::class,
+                    'sql' => 'SELECT COUNT(*) FROM activity',
                 ],
             ],
         ];
