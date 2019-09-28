@@ -20,9 +20,7 @@ $config = [
     ],
 
     'modules' => [
-        'calendar' => [
-            'class' => app\modules\calendar\Module::class,
-        ],
+        //
     ],
 
     'components' => [
@@ -65,34 +63,13 @@ $config = [
             'showScriptName' => false,
             //'enableStrictParsing' => true,
             'rules' => [
-                //'/' => 'site/index',
-                '/login' => 'site/login',
-
-                '/users' => 'user/index',
-
-                // user/view?id=1 => user/1
-                'user/<id:\d+>' => 'user/view',
-
-                // user/1/activities
-
-                'user/<id:\d+>/activities' => 'user/activities',
-
-                [
-                    'class' => yii\rest\UrlRule::class,
-                    'controller' => 'calendar/activity'
-                ],
-
-                'calendar/hello/<name>' => 'calendar/message/hello',
+                //
             ],
         ],
 
         'authManager' => [
             'class' => yii\rbac\DbManager::class,
         ],
-
-        //'formatter' => [
-        //    'dateFormat' => 'php:Y-m-d'
-        //],
     ],
 
     'params' => $params,
